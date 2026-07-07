@@ -1,3 +1,10 @@
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Flask](https://img.shields.io/badge/Flask-3.x-black)
+![MySQL](https://img.shields.io/badge/MySQL-Database-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+🇷🇺 [Русская версия](README.ru.md)
+
 # Meeting Room Management System
 
 A web application for booking and managing meeting rooms in office and coworking spaces.
