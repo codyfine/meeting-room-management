@@ -55,7 +55,7 @@ This project was developed as part of a university summer internship by a studen
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your_username/meeting-room-booking.git
+git clone https://github.com/codyfine/meeting-room-booking.git
 cd meeting-room-booking
 ```
 
