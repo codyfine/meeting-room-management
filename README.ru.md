@@ -69,8 +69,8 @@
 ### 1. Клонирование репозитория
 
 ```bash
-git clone https://github.com/codyfine/meeting-room-booking.git
-cd meeting-room-booking
+git clone https://github.com/codyfine/meeting-room-management.git
+cd meeting-room-management
 ```
 
 ### 2. Установка зависимостей
