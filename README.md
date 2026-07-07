@@ -64,8 +64,8 @@ This project was developed as part of a university summer internship by a studen
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/codyfine/meeting-room-booking.git
-cd meeting-room-booking
+git clone https://github.com/codyfine/meeting-room-management.git
+cd meeting-room-management
 ```
 
 ### 2. Install Python dependencies
