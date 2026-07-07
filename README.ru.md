@@ -3,7 +3,10 @@
 ![MySQL](https://img.shields.io/badge/MySQL-Database-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-🇬🇧 [English version](README.md)
+<p align="right">
+  <a href="README.md">🇬🇧 English</a> |
+  <a href="README.ru.md">🇷🇺 Русский</a>
+</p>
 
 # Система управления переговорными комнатами
 
