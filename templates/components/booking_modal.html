@@ -1,0 +1,34 @@
+<!-- ===== МОДАЛКА БРОНИРОВАНИЯ ===== -->
+<div class="modal-overlay" id="bookingModal">
+    <div class="modal-content">
+        <h2>📅 Бронирование</h2>
+        <p class="modal-subtitle" id="bookingInfo">Переговорная 1 — 10:00</p>
+
+        <div class="booking-summary">
+            <div class="row"><span class="label">Дата</span><span class="value" id="bookingDateDisplay">—</span></div>
+            <div class="row"><span class="label">Время</span><span class="value" id="bookingTimeDisplay">—</span></div>
+        </div>
+
+        <div class="form-group">
+            <label id="participantsLabel">Количество человек</label>
+            <input type="number" id="bookingParticipants" value="2" min="1" onchange="updateParticipants()">
+        </div>
+        <div class="form-group">
+            <label>Ответственный (ФИО)</label>
+            <input type="text" id="bookingResponsible" placeholder="Иванов Иван">
+        </div>
+        <div class="form-group">
+            <label>Участники <span class="participant-counter">(<span id="participantCount">1</span> из <span id="participantMax">4</span>)</span></label>
+            <div id="participantsList">
+                <div class="participant-row">
+                    <input type="text" class="participant-input" placeholder="Фамилия Имя">
+                    <button class="remove-btn" onclick="removeParticipant(this)">✕</button>
+                </div>
+            </div>
+            <button class="add-participant-btn" onclick="addParticipant()">+ Добавить участника</button>
+        </div>
+
+        <button class="btn-submit" onclick="confirmBooking()">✅ Забронировать</button>
+        <button class="btn-close" onclick="closeBooking()">Отмена</button>
+    </div>
+</div>

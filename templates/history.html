@@ -1,0 +1,436 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="history-container">
+    <div class="history-header">
+        <div>
+            <h1>📋 История бронирований</h1>
+            <p>Все ваши бронирования в одной таблице</p>
+        </div>
+        <a class="history-back-btn" href="/">← На главную</a>
+    </div>
+
+    <!-- Статистика -->
+    <div class="history-stats" id="historyStats">
+        <div class="stat-card">
+            <div class="stat-number" id="statTotal">0</div>
+            <div class="stat-label">Всего</div>
+        </div>
+        <div class="stat-card stat-active">
+            <div class="stat-number" id="statActive">0</div>
+            <div class="stat-label">Активные</div>
+        </div>
+        <div class="stat-card stat-completed">
+            <div class="stat-number" id="statCompleted">0</div>
+            <div class="stat-label">Завершённые</div>
+        </div>
+        <div class="stat-card stat-cancelled">
+            <div class="stat-number" id="statCancelled">0</div>
+            <div class="stat-label">Отменённые</div>
+        </div>
+    </div>
+
+    <!-- Фильтры -->
+    <div class="history-filters">
+        <button class="filter-btn active" data-filter="all" onclick="applyHistoryFilter('all')">Все</button>
+        <button class="filter-btn" data-filter="active" onclick="applyHistoryFilter('active')">Активные</button>
+        <button class="filter-btn" data-filter="completed" onclick="applyHistoryFilter('completed')">Завершённые</button>
+        <button class="filter-btn" data-filter="cancelled" onclick="applyHistoryFilter('cancelled')">Отменённые</button>
+    </div>
+
+    <!-- Таблица -->
+    <div class="history-table-wrapper">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Время</th>
+                    <th>Комната</th>
+                    <th>Участников</th>
+                    <th>Статус</th>
+                    <th>Присутствие</th>
+                </tr>
+            </thead>
+            <tbody id="historyTableBody">
+                <tr><td colspan="6" class="loading-text">Загрузка...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="historyEmpty" class="history-empty" style="display:none;">
+        <div class="empty-icon">📭</div>
+        <h3>Нет бронирований</h3>
+        <p>У вас пока нет бронирований с таким статусом</p>
+        <a href="/" class="btn-submit" style="display:inline-block;width:auto;padding:10px 24px;text-decoration:none;">Перейти к бронированию</a>
+    </div>
+</div>
+
+<!-- Модалка деталей брони -->
+<div class="modal-overlay" id="historyDetailModal">
+    <div class="modal-content">
+        <h2>📋 Детали бронирования</h2>
+        <div id="historyDetailContent">
+            <div class="booking-summary">
+                <div class="row"><span class="label">Комната</span><span class="value" id="detailRoom">—</span></div>
+                <div class="row"><span class="label">Дата</span><span class="value" id="detailDate">—</span></div>
+                <div class="row"><span class="label">Время</span><span class="value" id="detailTime">—</span></div>
+                <div class="row"><span class="label">Участников</span><span class="value" id="detailParticipants">—</span></div>
+                <div class="row"><span class="label">Участники</span><span class="value" id="detailParticipantList">—</span></div>
+                <div class="row"><span class="label">Статус</span><span class="value" id="detailStatus">—</span></div>
+                <div class="row"><span class="label">Присутствие</span><span class="value" id="detailCheckin">—</span></div>
+                <div class="row"><span class="label">Создано</span><span class="value" id="detailCreated">—</span></div>
+            </div>
+        </div>
+        <button class="btn-close" onclick="closeHistoryDetail()">Закрыть</button>
+    </div>
+</div>
+
+<style>
+/* Стили для страницы истории */
+.history-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 20px 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.history-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.history-header p {
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+.history-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 18px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--btn-bg);
+    color: var(--text-primary);
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.25s;
+}
+
+.history-back-btn:hover {
+    border-color: var(--accent);
+    background: var(--btn-hover);
+    transform: translateY(-2px);
+}
+
+.history-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.stat-active .stat-number { color: #4fc3f7; }
+.stat-completed .stat-number { color: #4caf50; }
+.stat-cancelled .stat-number { color: #ff6b6b; }
+
+.history-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--btn-bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.25s;
+}
+
+.filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    color: white;
+    border-color: transparent;
+}
+
+.history-table-wrapper {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table th,
+.history-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.history-table th {
+    background: var(--bg-column);
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.history-table tbody tr {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.history-table tbody tr:hover td {
+    background: var(--btn-hover);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-active {
+    background: rgba(79,195,247,0.2);
+    color: #4fc3f7;
+}
+.status-completed {
+    background: rgba(76,175,80,0.2);
+    color: #4caf50;
+}
+.status-cancelled {
+    background: rgba(255,107,107,0.2);
+    color: #ff6b6b;
+}
+
+.checkin-badge {
+    font-size: 12px;
+}
+.checkin-yes { color: #4caf50; }
+.checkin-no { color: #ff6b6b; }
+
+.loading-text {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 40px !important;
+}
+
+.history-empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 2px solid var(--border-color);
+}
+
+.history-empty .empty-icon {
+    font-size: 56px;
+    margin-bottom: 16px;
+}
+
+.history-empty h3 {
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.history-empty p {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .history-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .history-table th,
+    .history-table td {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+    .history-header h1 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .history-table-wrapper {
+        overflow-x: auto;
+    }
+    .history-table {
+        min-width: 600px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block script %}
+<script>
+let currentHistoryFilter = 'all';
+let historyData = [];
+
+async function loadHistory(filter = 'all') {
+    const me = await apiFetch('/api/auth/me');
+    if (!me || !me.authenticated) {
+        showToast('⚠️ Сначала войдите в систему', 'error');
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+        return;
+    }
+    
+    const data = await apiFetch(`/api/bookings/history?filter=${filter}`);
+    if (!data) {
+        showToast('❌ Не удалось загрузить историю', 'error');
+        return;
+    }
+    
+    historyData = data.bookings;
+    renderHistory(data.bookings);
+    updateStats(data.stats);
+}
+
+function renderHistory(bookings) {
+    const tbody = document.getElementById('historyTableBody');
+    const empty = document.getElementById('historyEmpty');
+    
+    if (!bookings || bookings.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        document.querySelector('.history-table-wrapper').style.display = 'none';
+        return;
+    }
+    
+    empty.style.display = 'none';
+    document.querySelector('.history-table-wrapper').style.display = 'block';
+    
+    tbody.innerHTML = bookings.map((b, index) => {
+        const statusMap = {
+            'active': '<span class="status-badge status-active">🟢 Активна</span>',
+            'completed': '<span class="status-badge status-completed">✅ Завершена</span>',
+            'cancelled': '<span class="status-badge status-cancelled">❌ Отменена</span>'
+        };
+        
+        const checkinMap = {
+            true: '<span class="checkin-badge checkin-yes">✅ Да</span>',
+            false: '<span class="checkin-badge checkin-no">❌ Нет</span>'
+        };
+        
+        return `
+            <tr data-id="${b.id}" onclick="showHistoryDetail(${b.id})">
+                <td>${b.date}</td>
+                <td>${b.time}</td>
+                <td>№${b.room_number} — ${b.room_name}</td>
+                <td>${b.participants_count} чел.</td>
+                <td>${statusMap[b.status] || b.status}</td>
+                <td>${checkinMap[b.checked_in]}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function updateStats(stats) {
+    document.getElementById('statTotal').textContent = stats.total;
+    document.getElementById('statActive').textContent = stats.active;
+    document.getElementById('statCompleted').textContent = stats.completed;
+    document.getElementById('statCancelled').textContent = stats.cancelled;
+}
+
+function applyHistoryFilter(filter) {
+    currentHistoryFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === filter);
+    });
+    loadHistory(filter);
+}
+
+function showHistoryDetail(bookingId) {
+    const booking = historyData.find(b => b.id === bookingId);
+    if (!booking) return;
+    
+    document.getElementById('detailRoom').textContent = `№${booking.room_number} — ${booking.room_name}`;
+    document.getElementById('detailDate').textContent = booking.date;
+    document.getElementById('detailTime').textContent = booking.time;
+    document.getElementById('detailParticipants').textContent = `${booking.participants_count} чел.`;
+    document.getElementById('detailParticipantList').textContent = booking.participants && booking.participants.length > 0 
+        ? booking.participants.join(', ') 
+        : 'Не указаны';
+    
+    const statusMap = {
+        'active': '🟢 Активна',
+        'completed': '✅ Завершена',
+        'cancelled': '❌ Отменена'
+    };
+    document.getElementById('detailStatus').textContent = statusMap[booking.status] || booking.status;
+    document.getElementById('detailCheckin').textContent = booking.checked_in ? '✅ Подтверждено' : '❌ Не подтверждено';
+    document.getElementById('detailCreated').textContent = booking.created_at ? new Date(booking.created_at).toLocaleString() : '—';
+    
+    document.getElementById('historyDetailModal').classList.add('active');
+}
+
+function closeHistoryDetail() {
+    document.getElementById('historyDetailModal').classList.remove('active');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadHistory('all');
+});
+</script>
+{% endblock %}

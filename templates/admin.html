@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <div>
+            <h1>Админ-панель</h1>
+            <p>Аналитика использования переговорных комнат</p>
+        </div>
+        <div class="admin-actions">
+            <a class="admin-back-btn" href="/">← На главную</a>
+        </div>
+    </div>
+
+    <div class="admin-periods">
+        <button class="admin-period-btn active" data-period="week" onclick="setAdminPeriod('week')">Текущая неделя</button>
+        <button class="admin-period-btn" data-period="month" onclick="setAdminPeriod('month')">Текущий месяц</button>
+        <button class="admin-period-btn" data-period="year" onclick="setAdminPeriod('year')">Текущий год</button>
+    </div>
+
+    <div class="admin-custom-period">
+        <div class="admin-date-field">
+            <label for="adminDateFrom">Дата с</label>
+            <input type="date" id="adminDateFrom">
+        </div>
+        <div class="admin-date-field">
+            <label for="adminDateTo">Дата по</label>
+            <input type="date" id="adminDateTo">
+        </div>
+        <button class="admin-period-btn admin-apply-btn" onclick="applyCustomAdminPeriod()">Показать отчёт</button>
+    </div>
+
+    <div class="admin-summary" id="adminSummary">
+        <div class="summary-card">
+            <div class="summary-title">Период</div>
+            <div id="adminPeriodTitle">—</div>
+            <small id="adminPeriodDates">—</small>
+        </div>
+        <div class="summary-card">
+            <div class="summary-title">Всего броней</div>
+            <div id="adminTotalBookings">—</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-title">Активных пользователей</div>
+            <div id="adminActiveUsers">—</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-title">Средняя загрузка</div>
+            <div id="adminUtilization">—</div>
+        </div>
+        <div class="summary-card popular-room-card">
+            <div class="summary-title">Самая популярная комната</div>
+            <div id="adminTopRoom">—</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-title">Пиковый час</div>
+            <div id="adminTopHour">—</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-title">Средняя длительность</div>
+            <div id="adminAverageDuration">—</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-title">Отменённые брони</div>
+            <div id="adminCancelled">—</div>
+            <small id="adminCancelledDetails">—</small>
+        </div>
+    </div>
+
+    <div class="admin-grid admin-grid-wide">
+        <section class="admin-card">
+            <h2>Динамика всех комнат</h2>
+            <p class="admin-card-subtitle">Сколько бронирований было в выбранном периоде</p>
+            <div id="allRoomsStats" class="stats-list"></div>
+        </section>
+
+        <section class="admin-card">
+            <h2>Популярность комнат</h2>
+            <p class="admin-card-subtitle">Сравнение всех переговорных между собой</p>
+            <div id="roomStats" class="stats-list"></div>
+        </section>
+    </div>
+
+    <div class="admin-grid admin-grid-wide">
+        <section class="admin-card">
+            <h2>Пиковые часы</h2>
+            <p class="admin-card-subtitle">В какое время переговорные чаще всего бронируют</p>
+            <div id="peakHoursStats" class="stats-list compact-stats"></div>
+        </section>
+
+        <section class="admin-card">
+            <h2>Самые активные пользователи</h2>
+            <p class="admin-card-subtitle">Кто чаще всего бронирует переговорные</p>
+            <div id="topUsersStats" class="stats-list compact-stats"></div>
+        </section>
+    </div>
+
+    <section class="admin-card admin-table-card">
+        <h2>Подробная статистика по комнатам</h2>
+        <p class="admin-card-subtitle">Брони, загрузка, посетители, отмены и последняя активность</p>
+        <div class="admin-table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Комната</th>
+                        <th>Брони</th>
+                        <th>Загрузка</th>
+                        <th>Посетители</th>
+                        <th>Уник. пользователи</th>
+                        <th>Средняя длительность</th>
+                        <th>Отмены</th>
+                        <th>Последняя бронь</th>
+                    </tr>
+                </thead>
+                <tbody id="roomTableBody">
+                    <tr><td colspan="8">Загрузка...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

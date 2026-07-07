@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <div class="dashboard-header">
+
+        <h1>Переговорные сейчас</h1>
+
+        <div id="currentClock"></div>
+
+    </div>
+
+    <div id="dashboardSummary" class="dashboard-summary">
+
+        <div class="summary-card">
+            <div class="summary-title">Всего</div>
+            <div id="totalRooms"></div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-title">Занято</div>
+            <div id="busyCount"></div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-title">Свободно</div>
+            <div id="freeCount"></div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-title">Загрузка</div>
+            <div id="utilization"></div>
+        </div>
+
+    </div>
+
+    <div class="dashboard-legend">
+
+        <span class="legend occupied">🟢 Встреча идет</span>
+
+        <span class="legend free">⚪ Свободна</span>
+
+    </div>
+
+    <div id="roomsGrid" class="rooms-grid"> </div>
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
+

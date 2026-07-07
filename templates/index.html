@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% include 'components/booking_modal.html' %}
+
+{% block content %}
+<!-- ===== ОСНОВНОЙ КОНТЕЙНЕР, КАЛЕНДАРЬ (ПОЛЬЗОВАТЕЛЬСКИЙ) ===== -->
+<div class="container">
+    <h1 class="page-title"><span class="highlight">Выберите</span> переговорную</h1>
+    <p class="page-subtitle">Бронируйте пространство для работы и встреч</p>
+
+    <div id="mainPage">
+        <div class="rooms-grid" id="roomsGrid"></div>
+    </div>
+
+    <div id="calendarPage">
+        <div class="calendar-header">
+            <button class="back-btn" onclick="goBack()">←</button>
+            <div class="calendar-room-info">
+                <div class="calendar-room-name" id="calendarRoomName">Переговорная 1</div>
+                <div class="calendar-room-capacity" id="calendarRoomCapacity">до 4 человек</div>
+            </div>
+            <div class="week-nav">
+                <button onclick="changeWeek(-1)">‹</button>
+                <span class="week-label" id="weekLabel">23–29 июня</span>
+                <button onclick="changeWeek(1)">›</button>
+                <button class="today-btn" onclick="resetWeek()">Сегодня</button>
+            </div>
+        </div>
+
+        <div class="calendar-wrapper">
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color free"></div>Свободно</div>
+            <div class="legend-item"><div class="legend-color booked"></div>Занято</div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+<script src="{{ url_for('static', filename='js/booking.js') }}"></script>
+
+{% endblock %}

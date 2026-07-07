@@ -1,0 +1,19 @@
+<!-- ===== ШАПКА ===== -->
+<header class="header">
+    <div class="header-left">
+        <a href="/" class="logo">
+            <span class="accent">Школа</span> 21
+        </a>
+    </div>
+    <div class="header-right">
+        <a href="/history" class="btn-auth btn-history" id="historyBtn" style="display:none;">📋 История</a>
+        <a href="/admin" class="btn-auth btn-admin" id="adminBtn" style="display:none;">Админ</a>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Сменить тему">🌙</button>
+        <button class="btn-auth btn-login" onclick="openModal('login')" id="loginBtn">Вход</button>
+        <button class="btn-auth btn-register" onclick="openModal('register')" id="registerBtn">Регистрация</button>
+        <button class="btn-profile" onclick="openModal('profile')" id="profileBtn" style="display:none;" title="Профиль">
+            <span id="profileInitials">?</span>
+            <span class="badge"></span>
+        </button>
+    </div>
+</header>

@@ -1,0 +1,23 @@
+<!-- ===== МОДАЛКА ПРОФИЛЯ ===== -->
+<div class="modal-overlay" id="profileModal">
+    <div class="modal-content">
+        <h2>👤 Профиль</h2>
+        <p class="modal-subtitle" id="profileNameDisplay">Иванов Иван</p>
+
+        <div class="form-group">
+            <label>ФИО <span class="required">*</span></label>
+            <input type="text" id="profileName" placeholder="Иванов Иван">
+        </div>
+        <div class="form-group">
+            <label>Email <span class="required">*</span></label>
+            <input type="email" id="profileEmail" placeholder="ivanov@school21.ru">
+        </div>
+
+        <button class="btn-submit" onclick="saveProfile()">💾 Сохранить</button>
+        <button class="btn-close" onclick="closeProfile()">Закрыть</button>
+
+        <div style="margin-top:16px;padding-top:16px;border-top:2px solid var(--border-color);">
+            <button class="btn-close" onclick="logout()" style="color:#ff6b6b;border-color:#ff6b6b;">🚪 Выйти</button>
+        </div>
+    </div>
+</div>
