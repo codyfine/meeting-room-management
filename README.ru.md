@@ -5,7 +5,6 @@
 
 <p align="right">
   <a href="README.md">🇬🇧 English</a> |
-  <a href="README.ru.md">🇷🇺 Русский</a>
 </p>
 
 # Система управления переговорными комнатами
